@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace HotelReservation
@@ -10,7 +11,10 @@ namespace HotelReservation
         public string name;
         private Dictionary<CustomerType, Rate> rate;
         private int totalrate;
+        public Hotel()
+        {
 
+        }
         public Hotel(String name, int rating, Dictionary<CustomerType, Rate> rate)
         {
             this.name = name;

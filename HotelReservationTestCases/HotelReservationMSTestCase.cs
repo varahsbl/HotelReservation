@@ -62,7 +62,7 @@ namespace HotelReservationTestCases
             Hotel cheapestHotelResult = this.hotelService.findCheapestHotelBasedOnDay(CustomerType.REGULAR,
                 "11Sep2020","12Sep2020");
             Assert.AreEqual(cheapestHotelResult.name,lakewood.name);
-            Assert.AreEqual(cheapestHotelResult.GetTotalRate(),  customerTypeRate[CustomerType.REGULAR].GetWeekDayRate() * 2);
+            Assert.AreEqual(cheapestHotelResult.GetTotalRate(), lakewood.GetRate()[CustomerType.REGULAR].GetWeekDayRate() *2 );
         }
         [TestMethod]
         public void GivenHotel_shouldBeAbleToAddRateAccordinfToDay()
@@ -79,6 +79,7 @@ namespace HotelReservationTestCases
 
             bool result = this.hotelService.addHotel(lakewood);
             Assert.IsTrue(result);
+
         }
         [TestMethod]
         public void GivenRating_whenInvokedAddHotel_shouldBeAbleToAdd()

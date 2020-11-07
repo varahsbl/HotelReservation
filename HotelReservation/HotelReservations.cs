@@ -38,19 +38,20 @@ namespace HotelReservation
         {
             DateTime initialDateTime = DateTime.Parse(initialDateRange);
             DateTime endDateTime = DateTime.Parse(endDateRange);
-
+            var hotel=new Hotel();
             int numberOfDays = endDateTime.Day-initialDateTime.Day+1;
             foreach (Hotel hot in hotels)
             {
                 var myList = hot.GetRate().ToList();
                 myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
                 hot.setRate(myList.ToDictionary(x => x.Key,y => y.Value));
-                hotels.OrderBy(x=>x.GetRate()[CustomerType.REGULAR].GetWeekDayRate());
+                hotel=hotels.OrderBy(x=>x.GetRate()[customer].GetWeekDayRate()).First();
                 Console.WriteLine("--->************", hot.name);
             }
-                              
-            var hotel = hotels.OrderBy(kvp => kvp.GetRate()).First();
-            hotel.SetTotalRate(hotel.GetRate()[CustomerType.REGULAR].GetWeekDayRate() * numberOfDays);
+
+            //    var hotel = hotels.OrderBy(kvp => kvp.GetRate()).First();
+            Console.WriteLine("--->******hot rate******", hotel.GetRate()[customer].GetWeekDayRate());
+            hotel.SetTotalRate(hotel.GetRate()[customer].GetWeekDayRate() * numberOfDays);
             return hotel;
 
         }
