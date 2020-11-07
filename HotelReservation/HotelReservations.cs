@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace HotelReservation
@@ -33,5 +34,25 @@ namespace HotelReservation
             }
         }
 
+        public Hotel findCheapestHotelBasedOnDay(CustomerType customer, string initialDateRange, string endDateRange)
+        {
+            DateTime initialDateTime = DateTime.Parse(initialDateRange);
+            DateTime endDateTime = DateTime.Parse(endDateRange);
+
+            int numberOfDays = endDateTime.Day-initialDateTime.Day+1;
+            foreach (Hotel hot in hotels)
+            {
+                var myList = hot.GetRate().ToList();
+                myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+                hot.setRate(myList.ToDictionary(x => x.Key,y => y.Value));
+                hotels.OrderBy(x=>x.GetRate()[CustomerType.REGULAR].GetWeekDayRate());
+                Console.WriteLine("--->************", hot.name);
+            }
+                              
+            var hotel = hotels.OrderBy(kvp => kvp.GetRate()).First();
+            hotel.SetTotalRate(hotel.GetRate()[CustomerType.REGULAR].GetWeekDayRate() * numberOfDays);
+            return hotel;
+
+        }
     }
 }
