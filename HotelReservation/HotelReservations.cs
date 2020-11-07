@@ -8,6 +8,7 @@ namespace HotelReservation
     public class HotelReservations
     {
         private List<Hotel> hotels;
+       
 
         public HotelReservations()
         {
@@ -33,26 +34,42 @@ namespace HotelReservation
                 return false;
             }
         }
-
-        public Hotel findCheapestHotelBasedOnDay(CustomerType customer, string initialDateRange, string endDateRange)
+       
+        public List<Hotel> findCheapestHotelBasedOnDay(CustomerType customer, string initialDateRange, string endDateRange)
         {
-            DateTime initialDateTime = DateTime.Parse(initialDateRange);
-            DateTime endDateTime = DateTime.Parse(endDateRange);
-            var hotel=new Hotel();
-            int numberOfDays = endDateTime.Day-initialDateTime.Day+1;
-            foreach (Hotel hot in hotels)
-            {
-                var myList = hot.GetRate().ToList();
-                myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
-                hot.setRate(myList.ToDictionary(x => x.Key,y => y.Value));
-                hotel=hotels.OrderBy(x=>x.GetRate()[customer].GetWeekDayRate()).First();
-                Console.WriteLine("--->************", hot.name);
-            }
+             
+        DateTime initialDateTime = DateFormatter.ConvertToDate(initialDateRange);
+            DateTime endDateTime = DateFormatter.ConvertToDate(initialDateRange);
+            
+            List<Hotel> hotelList= new List<Hotel>();
+            
+            foreach(Hotel singleHotel in hotels) {
+                int weekDay = 0;
+                int weekEnd = 0;
+                foreach (DateTime date in DateFormatter.Dates(initialDateRange, endDateRange))
+                {
+                    
+                    if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        weekEnd += singleHotel.GetRate()[customer].GetWeekEndRate();
 
-            //    var hotel = hotels.OrderBy(kvp => kvp.GetRate()).First();
-            Console.WriteLine("--->******hot rate******", hotel.GetRate()[customer].GetWeekDayRate());
-            hotel.SetTotalRate(hotel.GetRate()[customer].GetWeekDayRate() * numberOfDays);
-            return hotel;
+                    }
+                    else
+                    {
+                        weekDay += singleHotel.GetRate()[customer].GetWeekDayRate();
+                    }
+
+                }
+                singleHotel.SetTotalRate(weekDay + weekEnd);
+                hotelList.Add(singleHotel);
+            }
+             hotels.OrderBy(x => x.GetTotalRate());
+           
+            return hotels.OrderBy(x => x.GetTotalRate()).ToList();
+
+
+          
+           
 
         }
     }

@@ -55,17 +55,17 @@ namespace HotelReservationTestCases
             Assert.IsTrue(result);
         }
         [TestMethod]
-        public void GivenDateRange_whenSearched_shouldBeAbleToAddRatingsForHotel()
+        public void GivenDateRange_whenSearched_shouldBeAbleToFindCheapestHotelBasedOnWeekDay()
         {
              this.hotelService.addHotel(lakewood);
              this.hotelService.addHotel(bridgewood);
-            Hotel cheapestHotelResult = this.hotelService.findCheapestHotelBasedOnDay(CustomerType.REGULAR,
+           List< Hotel> cheapestHotelResult = this.hotelService.findCheapestHotelBasedOnDay(CustomerType.REGULAR,
                 "11Sep2020","12Sep2020");
-            Assert.AreEqual(cheapestHotelResult.name,lakewood.name);
-            Assert.AreEqual(cheapestHotelResult.GetTotalRate(), lakewood.GetRate()[CustomerType.REGULAR].GetWeekDayRate() *2 );
+            Assert.AreEqual(cheapestHotelResult[0].name,lakewood.name);
+            Assert.AreEqual(cheapestHotelResult[0].GetTotalRate(), lakewood.GetRate()[CustomerType.REGULAR].GetWeekDayRate() + lakewood.GetRate()[CustomerType.REGULAR].GetWeekEndRate());
         }
         [TestMethod]
-        public void GivenHotel_shouldBeAbleToAddRateAccordinfToDay()
+        public void GivenHotel_shouldBeAbleToAddRateAccordingToDay()
         {
             customerTypeRate = new Dictionary<CustomerType, Rate>();
             customerTypeRate.Add(CustomerType.REGULAR, new Rate(160, 40));
@@ -82,11 +82,26 @@ namespace HotelReservationTestCases
 
         }
         [TestMethod]
-        public void GivenRating_whenInvokedAddHotel_shouldBeAbleToAdd()
+        public void GivenDateRange_whenSearched_shouldBeAbleToFindCheapestHotelBasedOnWeekEnd()
+        {
+            this.hotelService.addHotel(lakewood);
+            this.hotelService.addHotel(bridgewood);
+            List<Hotel> cheapestHotelResult = this.hotelService.findCheapestHotelBasedOnDay(CustomerType.REGULAR,
+                "11Sep2020", "12Sep2020");
+            Assert.AreEqual(cheapestHotelResult[1].name, bridgewood.name);
+            Assert.AreEqual(cheapestHotelResult[1].GetTotalRate(), bridgewood.GetRate()[CustomerType.REGULAR].GetWeekDayRate() + bridgewood.GetRate()[CustomerType.REGULAR].GetWeekEndRate());
+
+            Assert.AreEqual(cheapestHotelResult[0].name, lakewood.name);
+            Assert.AreEqual(cheapestHotelResult[0].GetTotalRate(), lakewood.GetRate()[CustomerType.REGULAR].GetWeekDayRate() + lakewood.GetRate()[CustomerType.REGULAR].GetWeekEndRate());
+          
+        }
+        [TestMethod]
+        public void GivenRating_whenInvokedAddHotel_shouldBeAbleToAddRatingsForHotel()
         {
              Hotel lakewood = new Hotel("Lakewood", 3, null);
              bool result = this.hotelService.addHotel(lakewood);
              Assert.IsTrue(result);
         }
+       
     }
 }
