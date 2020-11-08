@@ -19,8 +19,6 @@ namespace HotelReservationTestCases
         {
             // Runs before each test. (Optional
             this.hotelService = new HotelReservations();
-
-           
             customerTypeRate.Add(CustomerType.REGULAR, new Rate(110, 90));
             customerTypeRate.Add(CustomerType.REWARD, new Rate(80, 80));
             lakewood = new Hotel("Lakewood", 3, customerTypeRate);
@@ -102,6 +100,58 @@ namespace HotelReservationTestCases
              bool result = this.hotelService.addHotel(lakewood);
              Assert.IsTrue(result);
         }
-       
+        [TestMethod]
+        public void GivenDates_whenInvokedFindCheapestBestRatedHotel_shouldBeAbleToFindCheapestBestRatedHotelBased()
+        {
+            this.hotelService.addHotel(lakewood);
+            this.hotelService.addHotel(bridgewood);
+            this.hotelService.addHotel(ridgewood);
+
+            List<Hotel> cheapestBestHotels = this.hotelService.findCheapesBestRatedtHotel(CustomerType.REGULAR,
+                "11Sep2020", "12Sep2020");
+            Assert.AreEqual(cheapestBestHotels.Count, 1);
+            Assert.AreEqual(cheapestBestHotels[0].name, bridgewood.name);
+            Assert.AreEqual(cheapestBestHotels[0].GetRatings(), bridgewood.GetRatings());
+        }
+        [TestMethod]
+        public void GivenDates_whenInvokedFindBestRatedHotel_shouldBeAbleToFindBestRatedHotelBased()
+        {
+            this.hotelService.addHotel(lakewood);
+            this.hotelService.addHotel(bridgewood);
+            this.hotelService.addHotel(ridgewood);
+            List<Hotel> cheapestBestHotels = this.hotelService.findBestRatedtHotel(CustomerType.REGULAR,
+                "11Sep2020", "12Sep2020");
+            Assert.AreEqual(cheapestBestHotels[1].name, ridgewood.name);
+            Assert.AreEqual(cheapestBestHotels[1].GetTotalRate(), ridgewood.GetTotalRate());
+        }
+        [TestMethod]
+        public void GivenHotel_whenInvokedAddHotelForRewardCustomers_shouldBeAbleToAddSpecialRate()
+        {
+            this.hotelService.addHotel(lakewood);
+            this.hotelService.addHotel(bridgewood);
+            this.hotelService.addHotel(ridgewood);
+            bool lakewoodresult = this.hotelService.addHotel(lakewood);
+            bool bridgewoodresult = this.hotelService.addHotel(bridgewood);
+            bool ridgewoodresult = this.hotelService.addHotel(ridgewood);
+
+            Assert.IsTrue(lakewoodresult);
+            Assert.IsTrue(bridgewoodresult);
+            Assert.IsTrue(ridgewoodresult);
+        }
+        [TestMethod]
+        public void GivenDateRange_whenInvokedFindCheapestBestRatedHotel_shouldBeAbleToFindCheapestBestRatedHotelBased()
+        {
+            this.hotelService.addHotel(lakewood);
+            this.hotelService.addHotel(bridgewood);
+            this.hotelService.addHotel(ridgewood);
+            List<Hotel> cheapestBestHotels = this.hotelService.findBestRatedtHotel(CustomerType.REWARD,
+                "11Sep2020", "12Sep2020");
+            Assert.AreEqual(cheapestBestHotels[1].name, ridgewood.name);
+            Assert.AreEqual(cheapestBestHotels[1].GetTotalRate(), ridgewood.GetTotalRate());
+            Assert.AreEqual(cheapestBestHotels[1].GetRatings(), ridgewood.GetRatings());
+
+        }
+
+
     }
 }

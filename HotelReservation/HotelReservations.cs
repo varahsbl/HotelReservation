@@ -8,7 +8,7 @@ namespace HotelReservation
     public class HotelReservations
     {
         private List<Hotel> hotels;
-       
+
 
         public HotelReservations()
         {
@@ -34,21 +34,20 @@ namespace HotelReservation
                 return false;
             }
         }
-       
+
         public List<Hotel> findCheapestHotelBasedOnDay(CustomerType customer, string initialDateRange, string endDateRange)
         {
-             
-        DateTime initialDateTime = DateFormatter.ConvertToDate(initialDateRange);
+
+            DateTime initialDateTime = DateFormatter.ConvertToDate(initialDateRange);
             DateTime endDateTime = DateFormatter.ConvertToDate(initialDateRange);
-            
-            List<Hotel> hotelList= new List<Hotel>();
-            
-            foreach(Hotel singleHotel in hotels) {
+
+            foreach (Hotel singleHotel in hotels)
+            {
                 int weekDay = 0;
                 int weekEnd = 0;
                 foreach (DateTime date in DateFormatter.Dates(initialDateRange, endDateRange))
                 {
-                    
+
                     if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
                     {
                         weekEnd += singleHotel.GetRate()[customer].GetWeekEndRate();
@@ -61,16 +60,26 @@ namespace HotelReservation
 
                 }
                 singleHotel.SetTotalRate(weekDay + weekEnd);
-                hotelList.Add(singleHotel);
             }
-             hotels.OrderBy(x => x.GetTotalRate());
-           
             return hotels.OrderBy(x => x.GetTotalRate()).ToList();
+        }
+        public List<Hotel> findCheapesBestRatedtHotel(CustomerType customer, string initialDateRange, string endDateRange)
+        {
+            List<Hotel> cheapestHotels = findCheapestHotelBasedOnDay(customer, initialDateRange, endDateRange);
+            cheapestHotels.Sort((e1, e2) => e1.GetRatings().CompareTo(e2.GetRatings()));
+            int highestRating = cheapestHotels.Last().GetRatings();
+            int cheapestRating = cheapestHotels.First().GetRatings();
+            return cheapestHotels.FindAll(e => e.GetRatings() != highestRating && e.GetRatings() != cheapestRating);
 
+        }
 
-          
-           
-
+        public List<Hotel> findBestRatedtHotel(CustomerType customer, string initialDateRange, string endDateRange)
+        {
+            List<Hotel> cheapestHotels = findCheapestHotelBasedOnDay(customer, initialDateRange, endDateRange);
+            cheapestHotels.Sort((e1, e2) => e1.GetRatings().CompareTo(e2.GetRatings()));
+            int highestRating = cheapestHotels.Last().GetRatings();
+            int cheapestRating = cheapestHotels.First().GetRatings();
+            return cheapestHotels.FindAll(e => e.GetRatings() != cheapestRating);
         }
     }
 }

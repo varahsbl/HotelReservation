@@ -29,6 +29,10 @@ namespace HotelReservation
         {
             return this.totalrate;
         }
+        public int GetRatings()
+        {
+            return this.rating;
+        }
         public void setRate(Dictionary<CustomerType, Rate> rate)
         {
              this.rate=rate;
