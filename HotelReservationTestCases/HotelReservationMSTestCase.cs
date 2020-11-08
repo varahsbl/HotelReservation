@@ -122,7 +122,7 @@ namespace HotelReservationTestCases
             List<Hotel> cheapestBestHotels = this.hotelService.findBestRatedtHotel(CustomerType.REGULAR,
                 "11Sep2020", "12Sep2020");
             Assert.AreEqual(cheapestBestHotels[1].name, ridgewood.name);
-            Assert.AreEqual(cheapestBestHotels[1].GetTotalRate(), ridgewood.GetTotalRate());
+            Assert.AreEqual(cheapestBestHotels[1].GetTotalRate(), 370);
         }
         [TestMethod]
         public void GivenHotel_whenInvokedAddHotelForRewardCustomers_shouldBeAbleToAddSpecialRate()
@@ -139,7 +139,7 @@ namespace HotelReservationTestCases
             Assert.IsTrue(ridgewoodresult);
         }
         [TestMethod]
-        public void GivenDateRange_whenInvokedFindCheapestBestRatedHotel_shouldBeAbleToFindCheapestBestRatedHotelBased()
+        public void GivenDateRange_whenInvokedFindCheapestBestRatedHotel_shouldBeAbleToFindCheapestBestRatedHotelBasedOnRewardCustomerType()
         {
             this.hotelService.addHotel(lakewood);
             this.hotelService.addHotel(bridgewood);
@@ -147,7 +147,7 @@ namespace HotelReservationTestCases
             List<Hotel> cheapestBestHotels = this.hotelService.findBestRatedtHotel(CustomerType.REWARD,
                 "11Sep2020", "12Sep2020");
             Assert.AreEqual(cheapestBestHotels[1].name, ridgewood.name);
-            Assert.AreEqual(cheapestBestHotels[1].GetTotalRate(), ridgewood.GetTotalRate());
+            Assert.AreEqual(cheapestBestHotels[1].GetTotalRate(), 140);
             Assert.AreEqual(cheapestBestHotels[1].GetRatings(), ridgewood.GetRatings());
 
         }
