@@ -37,10 +37,14 @@ namespace HotelReservation
 
         public List<Hotel> findCheapestHotelBasedOnDay(CustomerType customer, string initialDateRange, string endDateRange)
         {
-
+            try { }
+            catch { }
             DateTime initialDateTime = DateFormatter.ConvertToDate(initialDateRange);
-            DateTime endDateTime = DateFormatter.ConvertToDate(initialDateRange);
-
+            DateTime endDateTime = DateFormatter.ConvertToDate(endDateRange);
+            if (initialDateTime.Date > endDateTime.Date)
+            {
+                throw (new HotelReservationException("Invalid Date Range",HotelReservationException.ExceptionType.INVALID_DATERANGE));
+            }
             foreach (Hotel singleHotel in hotels)
             {
                 int weekDay = 0;

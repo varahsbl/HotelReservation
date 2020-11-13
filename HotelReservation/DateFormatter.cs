@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace HotelReservation
@@ -8,8 +9,17 @@ namespace HotelReservation
     {
         public static DateTime ConvertToDate(string date)
         {
+            var dateFormats = "ddMMMyyyy" ;
+            DateTime dateTime;
+            if (DateTime.TryParseExact(date, dateFormats, new CultureInfo("en-US"), DateTimeStyles.None, out dateTime))
+            {
+                dateTime = DateTime.Parse(date);
+            }else
+            {
+                throw (new HotelReservationException("Invalid Date Format", HotelReservationException.ExceptionType.INVALID_DATEFORMAT));
 
-            DateTime dateTime = DateTime.Parse(date);
+            }
+
             return dateTime;
 
         }

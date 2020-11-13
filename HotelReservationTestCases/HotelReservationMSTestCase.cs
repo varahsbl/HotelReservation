@@ -12,7 +12,7 @@ namespace HotelReservationTestCases
         private Hotel lakewood;
         private Hotel bridgewood;
         private Hotel ridgewood;
-       private Dictionary<CustomerType, Rate> customerTypeRate = new Dictionary<CustomerType, Rate>();
+        private Dictionary<CustomerType, Rate> customerTypeRate = new Dictionary<CustomerType, Rate>();
 
         [TestInitialize]
         public void Setup()
@@ -55,11 +55,11 @@ namespace HotelReservationTestCases
         [TestMethod]
         public void GivenDateRange_whenSearched_shouldBeAbleToFindCheapestHotelBasedOnWeekDay()
         {
-             this.hotelService.addHotel(lakewood);
-             this.hotelService.addHotel(bridgewood);
-           List< Hotel> cheapestHotelResult = this.hotelService.findCheapestHotelBasedOnDay(CustomerType.REGULAR,
-                "11Sep2020","12Sep2020");
-            Assert.AreEqual(cheapestHotelResult[0].name,lakewood.name);
+            this.hotelService.addHotel(lakewood);
+            this.hotelService.addHotel(bridgewood);
+            List<Hotel> cheapestHotelResult = this.hotelService.findCheapestHotelBasedOnDay(CustomerType.REGULAR,
+                 "11Sep2020", "12Sep2020");
+            Assert.AreEqual(cheapestHotelResult[0].name, lakewood.name);
             Assert.AreEqual(cheapestHotelResult[0].GetTotalRate(), lakewood.GetRate()[CustomerType.REGULAR].GetWeekDayRate() + lakewood.GetRate()[CustomerType.REGULAR].GetWeekEndRate());
         }
         [TestMethod]
@@ -91,14 +91,14 @@ namespace HotelReservationTestCases
 
             Assert.AreEqual(cheapestHotelResult[0].name, lakewood.name);
             Assert.AreEqual(cheapestHotelResult[0].GetTotalRate(), lakewood.GetRate()[CustomerType.REGULAR].GetWeekDayRate() + lakewood.GetRate()[CustomerType.REGULAR].GetWeekEndRate());
-          
+
         }
         [TestMethod]
         public void GivenRating_whenInvokedAddHotel_shouldBeAbleToAddRatingsForHotel()
         {
-             Hotel lakewood = new Hotel("Lakewood", 3, null);
-             bool result = this.hotelService.addHotel(lakewood);
-             Assert.IsTrue(result);
+            Hotel lakewood = new Hotel("Lakewood", 3, null);
+            bool result = this.hotelService.addHotel(lakewood);
+            Assert.IsTrue(result);
         }
         [TestMethod]
         public void GivenDates_whenInvokedFindCheapestBestRatedHotel_shouldBeAbleToFindCheapestBestRatedHotelBased()
@@ -151,7 +151,46 @@ namespace HotelReservationTestCases
             Assert.AreEqual(cheapestBestHotels[1].GetRatings(), ridgewood.GetRatings());
 
         }
+        [TestMethod]
+        public void GivenInvalidDateRange_whenSearched_shouldBeAbleToThrowException()
+        {
+            this.hotelService.addHotel(lakewood);
+            this.hotelService.addHotel(bridgewood);
+            this.hotelService.addHotel(ridgewood);
+            try
+            {
+                List<Hotel> cheapestBestHotels = this.hotelService.findBestRatedtHotel(CustomerType.REWARD,
+               "12Sep2020", "11Sep2020");
+            }
+            catch (HotelReservationException ex)
+            {
+                Assert.AreEqual(HotelReservationException.ExceptionType.INVALID_DATERANGE, ex.type);
+                Assert.AreEqual("Invalid Date Range", ex.message);
 
+            }
+        }
+        [TestMethod]
+        public void GivenInvalidDateFormat_shouldBeAbleToThrowException()
+        {
+            this.hotelService.addHotel(lakewood);
+            this.hotelService.addHotel(bridgewood);
+            this.hotelService.addHotel(ridgewood);
+            try
+            {
+                List<Hotel> cheapestBestHotels = this.hotelService.findBestRatedtHotel(CustomerType.REWARD,
+               "11-Sep-2020", "11Sep2020");
+            }
+            catch (HotelReservationException ex)
+            {
+                Assert.AreEqual(HotelReservationException.ExceptionType.INVALID_DATEFORMAT, ex.type);
+                Assert.AreEqual("Invalid Date Format", ex.message);
 
+            }
+
+        }
     }
 }
+
+            
+
+    
